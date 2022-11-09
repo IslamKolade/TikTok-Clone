@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok | Profile | {{current_user.username}}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.1.js"
+        integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+</head>
+<style>
+  .bottom {
+      width: 100%;
+      height: 42px;
+      background-color: rgb(0, 0, 0);
+      position: fixed;
+      bottom: 0;
+      display: none;
+  }
+
+  .bottom ul li {
+      position: absolute;
+      left: 50%;
+      bottom: 10%;
+      transform: translate(-50%, 50%);
+      transition: all .5s;
+  }
+
+  .bottom ul li:nth-child(1) {
+      left: 10%;
+      padding: 17px;
+      font-size: 15px;
+  }
+
+  .bottom ul li:nth-child(2) {
+      left: 27%;
+      padding: 17px 19px;
+      font-size: 15px;
+  }
+
+  .bottom ul li:nth-child(3) {
+      left: 50%;
+      padding: 17px 19px 45px;
+      font-size: 30px;
+  }
+
+  .bottom ul li:nth-child(4) {
+      left: 74%;
+      padding: 17px 19px;
+      font-size: 15px;
+  }
+
+  .bottom ul li:nth-child(5) {
+      left: 90%;
+      padding: 17px 19px;
+      font-size: 15px;
+  }
+
+  @media(max-width:528px) {
+      .bottom {
+          display: block;
+      }
+  }
+</style>
+<body>
+    <h1 style="text-align: center;">PROFILE</h1>
+    <h2>{{current_user.username}}</h2>
+    <h2>{{current_user.email}}</h2>
+    <nav class="navbar">
+        <div class="level-item has-text-centered">
+          <div>
+            <b>Tweets</b>
+            <p>3,456</p>
+          </div>
+        </div>
+        <div class="level-item has-text-centered">
+          <div>
+            <b>Following</b>
+            <p>123</p>
+          </div>
+        </div>
+        <div class="level-item has-text-centered">
+          <div>
+            <b>Followers</b>
+            <p class="title">456K</p>
+          </div>
+        </div>
+        <div class="level-item has-text-centered">
+          <div>
+            <b>Likes</b>
+            <p class="title">789</p>
+          </div>
+        </div>
+      </nav><br><br><br><br><br><br>
+
+      <a href="/tiktok/change_password/{{current_user.id}}" class="btn btn-secondary">Change password</a><br><br>
+      <a href="{{url_for('logout')}}" class="btn btn-danger">Log Out</a><br><br>
+      <a href="{{url_for('delete', id = current_user.id)}}" class="btn btn-danger">Delete Account</a>
+      <div class="bottom"><br><br><br><br>
+        <ul class="bottomUl" style="list-style: none;">
+            <li><pre><a href="/"><i class="material-icons" style="font-size: 20px; color: aliceblue;">home</i></a><p style="font-size: 9px; color: aliceblue;">Home</p></pre></li>
+            <li><pre><a href="#"><i class="material-icons" style="font-size: 20px; color: aliceblue;">search</i></a><p style="font-size: 9px; color: aliceblue;">Search</p></pre></li>
+            <li><a href="/tiktok/post"><i class="material-icons" style="font-size: 40px; color: aliceblue;">add_to_queue</i></a></li>
+            <li><pre><a href="#"><i class="material-icons" style="font-size: 20px; color: aliceblue;">chat</i></a><p style="font-size: 9px; color: aliceblue;">Inbox</p></pre></li>
+            <li><pre><a href="/tiktok/profile"><i class="material-icons" style="font-size: 20px; color: aliceblue;">person</i></a><p style="font-size: 9px; text-align: center; color: aliceblue;">Me</p></pre></li>
+        </ul>
+    </div>
+</body>
+</html>

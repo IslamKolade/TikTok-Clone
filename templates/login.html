@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login to TikTok</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body>
+    <div style="text-align: center;">
+    <h1>Login to TikTok</h1>
+    <div style="text-align: center;" class="form-group">
+    <form method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <label><b>Username or Email:</b></label><br><br>
+        <input name="email_or_username" class="form-control"  style="width: 50%; margin-left: 25%;" placeholder="Enter username or email" value="{{email_or_username}}" required><br><br>
+        <label><b>Password:</b></label><br><br>
+        <input type="password" name="password" class="form-control"  style="width: 50%; margin-left: 25%;" required><br><br>
+        <div style="color: red; margin-left: 45px;">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <b>{{ message|safe}}</b>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div><br>
+        <button type="submit" name="submit" class="btn btn-primary">Login</button>
+    </form><br><br>
+    <h4>Don't have an account? <a href="/tiktok/sign-up">Sign up now</a></h4>
+    </div>
+    </div>
+</body>
+</html>

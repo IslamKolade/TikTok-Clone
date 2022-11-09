@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TikTok</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
+</head>
+<style>
+    .bottom {
+        width: 100%;
+        height: 42px;
+        background-color: rgb(0, 0, 0);
+        position: fixed;
+        bottom: 0;
+        display: none;
+    }
+
+    .bottom ul li {
+        position: absolute;
+        left: 50%;
+        bottom: 10%;
+        transform: translate(-50%, 50%);
+        transition: all .5s;
+    }
+
+    .bottom ul li:nth-child(1) {
+        left: 10%;
+        padding: 17px;
+        font-size: 15px;
+    }
+
+    .bottom ul li:nth-child(2) {
+        left: 27%;
+        padding: 17px 19px;
+        font-size: 15px;
+    }
+
+    .bottom ul li:nth-child(3) {
+        left: 50%;
+        padding: 17px 19px 45px;
+        font-size: 30px;
+    }
+
+    .bottom ul li:nth-child(4) {
+        left: 74%;
+        padding: 17px 19px;
+        font-size: 15px;
+    }
+
+    .bottom ul li:nth-child(5) {
+        left: 90%;
+        padding: 17px 19px;
+        font-size: 15px;
+    }
+
+    @media(max-width:528px) {
+        .bottom {
+            display: block;
+        }
+    }
+</style>
+
+<body>
+    {% for post in posts %}
+    <div class="app__videos">
+        {% for message in get_flashed_messages() %}
+        <div style="background-color: black;">
+            <text style="color: white;">{{message|safe}}</text>
+        </div>
+        {% endfor %}
+        <!-- video starts -->
+        <div class="video">
+            <video class="video__player" src="{{url_for('static', filename='uploads/' + post.post_vid)}}"></video>
+            <!-- sidebar -->
+            <div class="videoSidebar">
+                <div class="videoSidebar__button" style="float: right;">
+                    <a href="tiktok/profile"><img src="{{url_for('static', filename='images/profile.png')}}"
+                            class="rounded-circle" alt="..." style="max-width: 40px; max-height: 40px;"></a>
+                </div><br>
+                <div class="videoSidebar__button" style="float: right;">
+                    <span class="material-icons" style="color: white;"> favorite_border </span><br>
+                    <text>12</text>
+                </div><br>
+                <div class="videoSidebar__button" style="float: right;">
+                    <a href="/tiktok/comment" style="text-decoration: none; color: white;"><span class="material-icons">
+                            message </span></a><br>
+                    <text>23</text>
+                </div><br>
+                {% if current_user.id == post.poster.id %}
+                <a href="/tiktokpost/delete/{{post.id}}" class="videoSidebar__button" style="float: right;"><span
+                        class="material-icons" style="color: white;">delete</span></a><br>
+                {% endif %}
+                <a class="twitter-share-button" target="_blank" rel="noopener noreferrer" style="float: right;"
+                    data-size="large"
+                    href="https://twitter.com/intent/tweet?text=Check out my post on TikTok localhost:5000/tiktok/fullpost/{{post.id}}">
+                </a><br>
+                <div class="videoSidebar__button" style="float: right;">
+                    <a href="{{url_for('static', filename='uploads/' + post.post_vid)}}"
+                        style="color: white; float: right;" download><img src="{{url_for('static', filename='images/tiktok_download.png')}}" style="max-width: 35px; max-height: 35px; float: right;" alt="" class="rounded-circle" /></a>
+                </div><br>
+                <a href="https://wa.me/?text=Check out my post on Tiktok localhost:5000/tiktok/fullpost/{{post.id}}"><img
+                        src="{{url_for('static', filename='images/whatsapp.png')}}" class="rounded-circle"
+                        style="max-width: 40px; max-height: 40px; float: right;"></a>
+            </div>
+            <!-- footer -->
+            <div class="videoFooter">
+                <div style="margin-left: 5px;">
+                    <h6>@{{post.poster.username}}</h6>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<text class="videoFooter__description">{{post.content}}</text>
+                    <br><br>
+                    <div class="videoFooter__ticker">
+                        <span class="material-icons videoFooter__icon"> music_note </span>
+                        <marquee>Rush by Ayra Star</marquee>
+                        <img src="{{url_for('static', filename='images/tiktok_music.png')}}"
+                            style="max-width: 45px; max-height: 45px; margin-right: -15px;" alt=""
+                            class="videoFooter__record rounded-circle" />
+                    </div>
+                </div>
+                <div class="bottom"><br><br><br><br>
+                    <ul class="bottomUl" style="list-style: none;">
+                        <li>
+                            <pre><a href="/"><i class="material-icons" style="font-size: 20px; color: aliceblue;">home</i></a><p style="font-size: 9px;">Home</p></pre>
+                        </li>
+                        <li>
+                            <pre><a href="#"><i class="material-icons" style="font-size: 20px; color: aliceblue;">search</i></a><p style="font-size: 9px;">Search</p></pre>
+                        </li>
+                        <li><a href="/tiktok/post"><i class="material-icons"
+                                    style="font-size: 40px; color: aliceblue;">add_to_queue</i></a></li>
+                        <li>
+                            <pre><a href="#"><i class="material-icons" style="font-size: 20px; color: aliceblue;">chat</i></a><p style="font-size: 9px;">Inbox</p></pre>
+                        </li>
+                        <li>
+                            <pre><a href="/tiktok/profile"><i class="material-icons" style="font-size: 20px; color: aliceblue;">person</i></a><p style="font-size: 9px; text-align: center;">Me</p></pre>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- video ends -->
+        {% endfor %}
+        <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+        <script>
+            const videos = document.querySelectorAll('video');
+            videos.autoplay
+            for (const video of videos) {
+                video.addEventListener('click', function () {
+                    console.log('clicked');
+                    if (video.paused) {
+                        video.play();
+                    } else {
+                        video.pause();
+                    }
+                });
+            }
+        </script>
+</body>
+
+</html>
