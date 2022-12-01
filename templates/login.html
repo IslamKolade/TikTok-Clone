@@ -1,35 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login to TikTok</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>Login</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/load.css')}}" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
 </head>
+
 <body>
-    <div style="text-align: center;">
-    <h1>Login to TikTok</h1>
-    <div style="text-align: center;" class="form-group">
-    <form method="post">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-        <label><b>Username or Email:</b></label><br><br>
-        <input name="email_or_username" class="form-control"  style="width: 50%; margin-left: 25%;" placeholder="Enter username or email" value="{{email_or_username}}" required><br><br>
-        <label><b>Password:</b></label><br><br>
-        <input type="password" name="password" class="form-control"  style="width: 50%; margin-left: 25%;" required><br><br>
-        <div style="color: red; margin-left: 45px;">
-            {% with messages = get_flashed_messages() %}
+    <div id="preloader"></div>
+    <br>
+    <h1 style="text-align: center;">Login</h1>
+    <div class="container" style="text-align: center;">
+        <img src="data:image/png;base64,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"
+            alt="" style="max-width: 150px; max-height: 150px;">
+
+        <form class="needs-validation" method="POST" novalidate>
+            <input type="hidden" value="{{ csrf_token() }}" name="csrf_token">
+
+            <div class="col">
+                <label for="validationCustom02" class="form-label">Email or Username</label>
+                <input type="text" name="email_or_username" placeholder="Enter email or username"
+                    value="{{email_or_username}}" class="form-control" id="validationCustom02" required>
+                <div class="valid-feedback">
+                    Valid email pattern!
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <label for="validationCustom01" class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control" id="passcheck1" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                </div>
+            </div><br>
+            <input type="checkbox" onclick="clicked1()">&nbsp;Show password
+            <br><br>
+            <div style="color: red;">
+                {% with messages = get_flashed_messages() %}
                 {% if messages %}
-                    {% for message in messages %}
-                        <b>{{ message|safe}}</b>
-                    {% endfor %}
+                {% for message in messages %}
+                {{ message }}
+                {% endfor %}
                 {% endif %}
-            {% endwith %}
-        </div><br>
-        <button type="submit" name="submit" class="btn btn-primary">Login</button>
-    </form><br><br>
-    <h4>Don't have an account? <a href="/tiktok/sign-up">Sign up now</a></h4>
+                {% endwith %}
+            </div><br>
+            <div class="mb-3">
+                <button class="btn btn-primary" type="submit">Login</button>
+            </div>
+        </form>
+        <p style="text-align: center;">Don't have an account? <a href="/sign-up">sign up</a> now.</p>
     </div>
-    </div>
+    <script src="{{ url_for('static', filename='js/sign_up.js')}}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
+        crossorigin="anonymous"></script>
+    <script>
+        var loader = document.getElementById("preloader");
+        window.addEventListener('load', function () {
+            loader.style.display = "none";
+        })
+    </script>
 </body>
+
 </html>

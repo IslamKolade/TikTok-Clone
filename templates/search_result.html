@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok | Search result of posts | {{current_user.username}}</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="{{url_for('static', filename='css/load.css')}}" />
+    <link rel="stylesheet" href="{{url_for('static', filename='css/styles.css')}}" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<style>
+    .bottom {
+        width: 100%;
+        height: 70px;
+        background-color: rgb(0, 0, 0);
+        position: fixed;
+        bottom: 0;
+        display: none;
+    }
+
+    .bottom ul li {
+        position: absolute;
+        left: 50%;
+        bottom: 10%;
+        transform: translate(-50%, 50%);
+        transition: all .5s;
+    }
+
+    .bottom ul li:nth-child(1) {
+        left: 10%;
+        padding: 17px 19px 60px;
+    }
+
+    .bottom ul li:nth-child(2) {
+        left: 29%;
+        padding: 17px 19px 60px;
+    }
+
+    .bottom ul li:nth-child(3) {
+        left: 50%;
+        padding: 17px 19px 60px;
+    }
+
+    .bottom ul li:nth-child(4) {
+        left: 72%;
+        padding: 17px 19px 60px;
+    }
+
+    .bottom ul li:nth-child(5) {
+        left: 90%;
+        padding: 17px 19px 60px;
+    }
+
+    @media(max-width:528px) {
+        .bottom {
+            display: block;
+        }
+    }
+</style>
+
+<body>
+    <div id="preloader"></div>
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+        {{message}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %} <br>
+    <form class="d-flex container" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+        <input class="form-control" type="search" placeholder="Search Posts" aria-label="Search" name="searched">
+        <button type="submit" class="border border-0" style="color: red; background-color: white;">Search</button>
+    </form>
+    <h2 class="container">Search results for<em>&nbsp;{{ searched }}</em></h2>
+    {% if posts %}
+    {% for post in posts %}
+    <br>
+    <div class="row container">
+        <a href="{{ url_for ('fullpost', id = post.id)}}" style="color: black; text-decoration: none;">
+            <div class="row__posters card">
+                <video src="{{ url_for('static', filename='uploads/' + post.post_vid) }}"
+                    class="row__poster row__posterLarge"></video>
+                <br><b>{{post.poster.username}}{% if post.poster.id == 1 or post.poster.id == 2 %}&nbsp;<img
+                        src="{{ url_for('static', filename='images/veri.png')}}" height="20px" width="20px">{% endif
+                    %}</b>
+                <h6 class="card-title">{{post.content}}</h6>
+                <small>{{post.date_posted | humanize }}</small>
+            </div>
+        </a>
+    </div>
+    </a>
+    {% endfor %}
+    {% else %}
+    <h2>Nothing found!</h2>
+    {% endif %}<br><br><br><br>
+    <div class="bottom"><br><br><br><br>
+        <ul class="bottomUl" style="list-style: none;">
+            <li>
+                <a href="/"><i class="material-icons" style="font-size: 40px; color: aliceblue;">home</i></a>
+            </li>
+            <li>
+                <a href="/search"><i class="material-icons" style="font-size: 40px; color: aliceblue;">search</i></a>
+            </li>
+            <li><a href="/create_post"><i class="material-icons"
+                        style="font-size: 40px; color: aliceblue;">add_to_queue</i></a></li>
+            <li>
+                <a href="#"><i class="material-icons" style="font-size: 40px; color: aliceblue;">chat</i></a>
+            </li>
+            <li>
+                <a href="/profile/{% if current_user.id %}{{current_user.id}}{% else %}0{% endif %}"><i
+                        class="material-icons" style="font-size: 40px; color: aliceblue;">person</i></a>
+            </li>
+        </ul>
+    </div>
+    <script>
+        var loader = document.getElementById("preloader");
+        window.addEventListener('load', function () {
+            loader.style.display = "none";
+        })
+    </script>
+</body>
+
+</html>

@@ -5,82 +5,118 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TikTok</title>
-    <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}"/>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title> Full post {{fullpost.content}} - TikTok</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/style2.css')}}" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
 </head>
 <style>
-.bottom{
-    width: 100%;
-    height: 42px;
-    background-color: rgb(0, 0, 0);
-    position: fixed;
-    bottom: 0;
-    display: none;
-}
-@media(max-width:528px){
-    .bottom{
-        display: block;
+    .bottom {
+        width: 100%;
+        height: 42px;
+        background-color: rgb(0, 0, 0);
+        position: fixed;
+        bottom: 0;
+        display: none;
     }
-}
+
+    @media(max-width:528px) {
+        .bottom {
+            display: block;
+        }
+    }
 </style>
 
 <body>
+    <div id="preloader"></div>
     <div class="app__videos">
-        {% for message in get_flashed_messages() %}
-        <div style="background-color: black;">
-            <text style="color: white;">{{message|safe}}</text>
-        </div>
-        {% endfor %}
         <!-- video starts -->
         <div class="video">
-            <video class="video__player" src="{{url_for('static', filename='uploads/' + fullpost.post_vid)}}"></video>
+            <span class="video-player">
+                <video class="video__player" src="{{url_for('static', filename='uploads/' + fullpost.post_vid)}}"
+                    preload="metadata"></video>
+            </span>
+            <a href="/"><i class="fa-solid fa-arrow-left"></i></a>
             <!-- sidebar -->
-            <div class="videoSidebar">
-                <div class="videoSidebar__button" style="float: right;">
-                    <a href="tiktok/profile"><img src="{{url_for('static', filename='images/profile.png')}}"
-                            class="rounded-circle" alt="..." style="max-width: 40px; max-height: 40px;"></a>
+            <div class="videoSidebar" style="text-align:center;">
+                <div class="videoSidebar__button" style="float: right; position: relative;">
+                    <a href="/profile/{{fullpost.poster.id}}">
+                        {% if fullpost.poster.profile_picture %}
+                        <img src="{{ url_for('static', filename='uploads/' + fullpost.poster.profile_picture)}}" alt=""
+                            height="55px" width="55px" class="rounded-circle border border-3">
+                        <i class="fa fa-plus"></i>
+                        {% else %}
+                        <img src="{{ url_for('static', filename='images/default_profile_pic.png')}}" height="50px"
+                            width="50px" class="rounded-circle border border-3">
+                        <i class="fa fa-plus"></i>
+                        {% endif %}
+                    </a>
                 </div><br>
                 <div class="videoSidebar__button" style="float: right;">
-                    <span class="material-icons" style="color: white;"> favorite_border </span><br>
-                    <text>12</text>
-                </div><br>
+                    {% if current_user.id in fullpost.likes|map(attribute="liker_id")|list %}
+                    <i class="fa-sharp fa-solid fa-heart" id="like-button-{{fullpost.id}}"
+                        onclick="like({{fullpost.id}})" style="color: red; font-size: 40px;"></i><br>
+                    {% else %}
+                    <i class="fa-sharp fa-solid fa-heart" id="like-button-{{fullpost.id}}"
+                        onclick="like({{fullpost.id}})" style="color: white; font-size: 40px;"></i><br>
+                    {% endif %}
+                    <span id="likes-count-{{fullpost.id}}" style="color: white;"><b>{{ fullpost.likes | length
+                            }}</b></span>
+                </div><br><br>
                 <div class="videoSidebar__button" style="float: right;">
-                    <a href="/tiktok/comment" style="text-decoration: none; color: white;"><span class="material-icons">
+                    <a href="/comment" style="text-decoration: none; color: white;"><span class="material-icons"
+                            style="color: white; font-size: 40px;">
                             message </span></a><br>
-                    <text>23</text>
+                    <text style="color: white;">23</text>
                 </div><br>
-                {% if current_user.id == fullpost.poster.id%}
-                <a href="/tiktokpost/delete/{{fullpost.id}}" class="videoSidebar__button" style="float: right;"><span class="material-icons" style="color: white;">delete</span></a><br>
+                {% if current_user.id == fullpost.poster.id or current_user.id == 1 %}
+                <a href="/tiktokpost/delete/{{fullpost.id}}" class="videoSidebar__button" style="float: right;"><span
+                        class="material-icons" style="color: red;">delete</span></a><br>
                 {% endif %}
-                <a class="twitter-share-button" target="_blank" rel="noopener noreferrer" style="float: right;" data-size="large"
-                    href="https://twitter.com/intent/tweet?text=Check out my post on TikTok localhost:5000/tiktok/fullpost/{{fullpost.id}}">
+                <a class="twitter-share-button" target="_blank" rel="noopener noreferrer" style="float: right;"
+                    data-size="large"
+                    href="https://twitter.com/intent/tweet?text=Check out my post on TikTok https://tiktok.pythonanywhere.com/tiktok/fullpost/{{fullpost.id}}">
                 </a><br>
                 <div class="videoSidebar__button" style="float: right;">
-                    <a href="{{url_for('static', filename='uploads/' + fullpost.post_vid)}}" style="color: white; float: right;"
-                        download><img src="{{url_for('static', filename='images/tiktok_download.png')}}" style="max-width: 35px; max-height: 35px; float: right;" alt="" class="rounded-circle" /></a>
+                    <a href="{{url_for('static', filename='uploads/' + fullpost.post_vid)}}"
+                        style="color: white; float: right;" download><img
+                            src="{{url_for('static', filename='images/tiktok_download.png')}}"
+                            style="max-width: 40px; max-height: 40px; float: right;" alt=""
+                            class="rounded-circle" /></a>
                 </div><br>
-                <a href="https://wa.me/?text=Check out my post on TikTok localhost:5000/tiktok/fullpost/{{fullpost.id}}"><img src="{{url_for('static', filename='images/whatsapp.png')}}" class="rounded-circle" style="max-width: 40px; max-height: 40px; float: right;"></a>
+                <div class="videoSidebar__button" style="float: right;">
+                    <a
+                        href="https://wa.me/?text=Check out my post on Tiktok https://tiktok.pythonanywhere.com/tiktok/fullpost/{{fullpost.id}}"><img
+                            src="{{url_for('static', filename='images/whatsapp.png')}}" class="rounded-circle"
+                            style="max-width: 40px; max-height: 40px; float: right;"></a>
+                </div>
             </div>
             <!-- footer -->
             <div class="videoFooter">
                 <div style="margin-left: 5px;">
-                    <h6>@{{fullpost.poster.username}}</h6>
-                    &nbsp;&nbsp;&nbsp;&nbsp;<text class="videoFooter__description">{{fullpost.content}}</text>
-                    <br><br>
-                    <div class="videoFooter__ticker">
-                        <span class="material-icons videoFooter__icon"> music_note </span>
-                        <marquee>Rush by Ayra Star</marquee>
-                        <img src="{{url_for('static', filename='images/tiktok_music.png')}}" style="max-width: 45px; max-height: 45px; margin-right: -15px;" alt="" class="videoFooter__record rounded-circle" /><br>
-                    </div>
+                    <b>@{{fullpost.poster.username}}</b>{% if fullpost.poster.id == 1 or fullpost.poster.id == 2
+                    %}&nbsp;<img src="{{ url_for('static', filename='images/veri.png')}}" height="20px" width="20px">{%
+                    endif %}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<b class="videoFooter__description text-wrap">{{fullpost.content}}</text>
+                        <br>&nbsp;&nbsp;&nbsp;&nbsp; <small>{{fullpost.date_posted|humanize}}</small>
+                        <br><br>
+                        <div class="videoFooter__ticker">
+                            <span class="material-icons videoFooter__icon"> music_note </span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<text>original sound - @{{fullpost.poster.username}}</text>
+                            <img src="https://www.nicepng.com/png/detail/329-3297274_compact-disc-cd-comments-disc-icon-png.png"
+                                style="max-width: 45px; max-height: 45px; margin-right: -15px;" alt=""
+                                class="videoFooter__record rounded-circle" />
+                        </div>
+                        <small class="bottom" style="font-weight: 10%;"><a href="/comment"
+                                style="color: white;text-decoration: none;">Add comment...</a></small>
                 </div>
-                <small class="bottom" style="font-weight: 10%;"><a href="/tiktok/comment" style="color: white;text-decoration: none;">Add comment...</a></small>
             </div>
         </div>
         <!-- video ends -->
         <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+        <script async src="{{ url_for('static', filename='js/like.js')}}"></script>
         <script>
             const videos = document.querySelectorAll('video');
             videos.autoplay
@@ -94,6 +130,12 @@
                     }
                 });
             }
+        </script>
+        <script>
+            var loader = document.getElementById("preloader");
+            window.addEventListener('load', function () {
+                loader.style.display = "none";
+            })
         </script>
 </body>
 

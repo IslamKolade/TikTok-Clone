@@ -1,127 +1,154 @@
 * {
-    margin: 0;
-    box-sizing: border-box;
+  margin: 0;
+  box-sizing: border-box;
+}
+html {
+  scroll-snap-type: y mandatory;
+}
+
+body {
+  background-color: black;
+  display: grid;
+  place-items: center;
+  font-family: Sans-Serif;
+}
+
+  #preloader{
+  background: #000 url(/static/images/spin-loading.gif) no-repeat center center;
+  background-size: 30%;
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  z-index: 100;
+}
+.app__videos {
+  position: relative;
+  max-height: 800px;
+  background-color: red;
+  overflow: scroll;
+  max-width: 100%;
+  border-radius: 0px;
+  scroll-snap-type: y mandatory;
+  scroll-snap-align: center;
+  margin: auto;
+}
+
+.app__videos::-webkit-scrollbar {
+  display: none;
+}
+
+.fa-plus {
+font-size: 16px;
+position: absolute;
+top: 65%;
+left: 50%;
+transform: translate(-50%);
+height: 20px;
+width: 20px;
+border-radius: 50%;
+background-color: #ff2828;
+display: flex;
+justify-content: center;
+align-items: center;
+}
+
+.center {
+display: block;
+margin-left: auto;
+margin-right: auto;
+width: 50%;
+}
+.video {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  background-color: black;
+  scroll-snap-align: center;
+  overflow: hidden;
+}
+
+.video__player {
+  position: relative;
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+
+.videoSidebar {
+  position: absolute;
+  top: 23%;
+  right: 2px;
+}
+
+.videoSidebar .material-icons {
+  font-size: 28px;
+  cursor: pointer;
+}
+
+.videoSidebar__button {
+  padding: 8px;
+  text-align: center;
+}
+
+.videoFooter {
+  position: relative;
+  bottom: 28.5%;
+  color: white;
+  display: flex;
+}
+
+@keyframes spinTheRecord {
+  from {
+    transform: rotate(0deg);
   }
-  
-  html {
-    scroll-snap-type: y mandatory;
+  to {
+    transform: rotate(360deg);
   }
-  
-  body {
-    background-color: black;
-    height: 100vh;
-    display: grid;
-    place-items: center;
-  }
-  
+}
+
+.videoFooter__record {
+  animation: spinTheRecord infinite 5s linear;
+  height: 50px;
+  filter: invert(1);
+  position: absolute;
+  bottom: 0;
+  right: 20px;
+}
+
+.videoFooter__text {
+  flex: 1;
+}
+
+.videoFooter__text h3 {
+  padding-bottom: 20px;
+}
+
+.videoFooter__icon {
+  position: absolute;
+}
+
+.videoFooter__ticker {
+  width: 400px;
+  display: flex;
+  align-items: center;
+}
+
+
+.videoFooter__ticker marquee {
+  height: fit-content;
+  margin-left: 30px;
+  width: 60%;
+}
+
+.videoFooter__description {
+  padding-bottom: 20px;
+}
+
+@media (max-width: 425px) {
   .app__videos {
-    position: relative;
-    height: 750px;
-    background-color: white;
-    overflow: scroll;
-    width: 100%;
-    max-width: 400px;
-    border-radius: 20px;
-  }
-  
-  .app__videos::-webkit-scrollbar {
-    display: none;
-  }
-  
-  .app__videos {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-  
-  .video {
-    position: relative;
-    height: 100%;
-    width: 100%;
-    background-color: white;
-    scroll-snap-align: start;
-  }
-  
-  .video__player {
-    object-fit: cover;
     width: 100%;
     height: 100%;
+    border-radius: 0;
   }
-  
-  .videoSidebar {
-    position: absolute;
-    top: 6%;
-    right: 2px;
-  }
-  
-  .videoSidebar .material-icons {
-    font-size: 28px;
-    cursor: pointer;
-  }
-  
-  .videoSidebar__button {
-    padding: 10px;
-    text-align: center;
-  }
-  
-  .videoFooter {
-    position: relative;
-    bottom: 150px;
-    color: white;
-    display: flex;
-  }
-  
-  @keyframes spinTheRecord {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
-  
-  .videoFooter__record {
-    animation: spinTheRecord infinite 5s linear;
-    height: 50px;
-    filter: invert(1);
-    position: absolute;
-    bottom: 0;
-    right: 20px;
-  }
-  
-  .videoFooter__text {
-    flex: 1;
-  }
-  
-  .videoFooter__text h3 {
-    padding-bottom: 20px;
-  }
-  
-  .videoFooter__icon {
-    position: absolute;
-  }
-  
-  .videoFooter__ticker {
-    width: 400px;
-    display: flex;
-    align-items: center;
-  }
-  
-  
-  .videoFooter__ticker marquee {
-    height: fit-content;
-    margin-left: 30px;
-    width: 60%;
-  }
-  
-  .videoFooter__description {
-    padding-bottom: 20px;
-  }
-  
-  @media (max-width: 425px) {
-    .app__videos {
-      width: 100%;
-      height: 100%;
-      max-width: 100%;
-      border-radius: 0;
-    }
-  }
+}

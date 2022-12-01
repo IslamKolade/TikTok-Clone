@@ -1,32 +1,140 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>Edit Profile | {{tiktoker_to_update.username }}</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/load.css')}}" />
+    <script src="https://code.jquery.com/jquery-3.6.1.js"
+        integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
+
 <body>
+    <style>
+        .bottom {
+            width: 100%;
+            height: 70px;
+            background-color: rgb(0, 0, 0);
+            position: fixed;
+            bottom: 0;
+            display: none;
+        }
+
+        .bottom ul li {
+            position: absolute;
+            left: 50%;
+            bottom: 10%;
+            transform: translate(-50%, 50%);
+            transition: all .5s;
+        }
+
+        .bottom ul li:nth-child(1) {
+            left: 10%;
+            padding: 17px 19px 60px;
+        }
+
+        .bottom ul li:nth-child(2) {
+            left: 29%;
+            padding: 17px 19px 60px;
+        }
+
+        .bottom ul li:nth-child(3) {
+            left: 50%;
+            padding: 17px 19px 60px;
+        }
+
+        .bottom ul li:nth-child(4) {
+            left: 72%;
+            padding: 17px 19px 60px;
+        }
+
+        .bottom ul li:nth-child(5) {
+            left: 90%;
+            padding: 17px 19px 60px;
+        }
+
+        @media(max-width:528px) {
+            .bottom {
+                display: block;
+            }
+        }
+    </style>
+    <style>
+        .custom-file-upload {
+            display: inline-block;
+            cursor: pointer;
+        }
+    </style>
+    <div id="preloader"></div>
     <div style="text-align: center;">
-    <h1>Edit Profile</h1>
-    <div style="text-align: center;" class="form-group">
-        <div style="color: red; margin-left: 45px;">
-            {% with messages = get_flashed_messages() %}
+        <h1>Edit Profile</h1>
+        <div style="text-align: center;" class="form-group">
+            <div style="color: red; margin-left: 40px;">
+                {% with messages = get_flashed_messages() %}
                 {% if messages %}
-                    {% for message in messages %}
-                        <p>{{ message|safe}}</p>
-                    {% endfor %}
+                {% for message in messages %}
+                <p>{{ message|safe}}</p>
+                {% endfor %}
                 {% endif %}
-            {% endwith %}
+                {% endwith %}
+            </div>
+            <form method="post" enctype="multipart/form-data">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                <label><b>Username:</b></label><br><br>
+                <input type="text" name="username" class="form-control" style="width: 50%; margin-left: 25%;"
+                    value="{{tiktoker_to_update.username}}"><br><br>
+
+                <label><b>Bio:</b></label><br><br>
+                <textarea name="bio" rows="4" class="form-control"
+                    style="width: 50%; margin-left: 25%;">{{tiktoker_to_update.bio}}</textarea><br><br>
+                <label class="form-label">Change photo:</label>
+                <label for="file-upload" class="custom-file-upload">
+                    <span class="material-icons" style="font-size: 50px; color: blue;">camera</span>
+                </label>
+                <input id="file-upload" accept=".png, .jpg, .jpeg" name="profile_picture" type="file"
+                    style="display: none;"><br>
+                <small style="color: blue;">*Image size limit is 16mb.</small><br>
+                <button type="submit" name="submit" class="btn btn-primary">Edit</button>
+            </form>
         </div>
-    <form method="post">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-        <label><b>Username:</b></label><br><br>
-        <input type="text" name="username" class="form-control" style="width: 50%; margin-left: 25%;" value="{{tiktoker_to_update.username}}" required><br><br>
-        <button type="submit" name="submit" class="btn btn-primary">Edit</button>
-    </form>
     </div>
+    <div class="bottom"><br><br><br><br>
+        <ul class="bottomUl" style="list-style: none;">
+            <li>
+                <a href="/"><i class="material-icons" style="font-size: 40px; color: aliceblue;">home</i></a>
+            </li>
+            <li>
+                <a href="/search"><i class="material-icons" style="font-size: 40px; color: aliceblue;">search</i></a>
+            </li>
+            <li><a href="/create_post"><i class="material-icons"
+                        style="font-size: 40px; color: aliceblue;">add_to_queue</i></a></li>
+            <li>
+                <a href="#"><i class="material-icons" style="font-size: 40px; color: aliceblue;">chat</i></a>
+            </li>
+            <li>
+                <a href="/profile/{% if current_user.id %}{{current_user.id}}{% else %}0{% endif %}"><i
+                        class="material-icons" style="font-size: 40px; color: aliceblue;">person</i></a>
+            </li>
+        </ul>
     </div>
+    <script>
+        $('#file-upload').change(function () {
+            var i = $(this).prev('label').clone();
+            var file = $('#file-upload')[0].files[0].name;
+            $(this).prev('label').text(file);
+        });
+    </script>
+    <script>
+        var loader = document.getElementById("preloader");
+        window.addEventListener('load', function () {
+            loader.style.display = "none";
+        })
+    </script>
 </body>
+
 </html>
